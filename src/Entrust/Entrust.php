@@ -36,10 +36,10 @@ class Entrust
      *
      * @return bool
      */
-    public function hasRole($role, $requireAll = false)
+    public function hasRole($role, $siteId, $requireAll = false)
     {
         if ($user = $this->user()) {
-            return $user->hasRole($role, $requireAll);
+            return $user->hasRole($role, $siteId, $requireAll);
         }
 
         return false;
@@ -86,7 +86,9 @@ class Entrust
      */
     public function user()
     {
-        return $this->app->auth->user();
+        $id = $this->app->session()->get('user')['id'];
+        $aaa = User::where('id','=',$id)->first();
+        return $aaa;
     }
 
     /**

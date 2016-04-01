@@ -8,6 +8,7 @@
  * @package Zizaco\Entrust
  */
 
+use App\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
@@ -35,7 +36,10 @@ class EntrustRole
 	 */
 	public function handle($request, Closure $next, $roles)
 	{
-		if ($this->auth->guest() || !$request->user()->hasRole(explode('|', $roles))) {
+		$siteId = $request->session()->get('site_id');
+		$siteId = isset($siteId)?$siteId:1;
+		$id = $request->session()->get('user')['id'];
+		if (!User::where('id','=',$id)->first()->hasRole(explode('|', $roles),$siteId)) {
 			abort(403);
 		}
 

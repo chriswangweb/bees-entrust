@@ -42,7 +42,7 @@
             "src/commands"
         ],
         "psr-4": {
-            "bees-entrust\\Entrust\\": "src/Entrust/"
+            "Zizaco\\Entrust\\": "src/Entrust/"
         }
     },
     "autoload-dev": {

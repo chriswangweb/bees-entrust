@@ -8,6 +8,7 @@
  * @package Zizaco\Entrust
  */
 
+use App\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
@@ -37,7 +38,8 @@ class EntrustAbility
 	 */
 	public function handle($request, Closure $next, $roles, $permissions, $validateAll = false)
 	{
-		if ($this->auth->guest() || !$request->user()->ability(explode('|', $roles), explode('|', $permissions), array('validate_all' => $validateAll))) {
+		$id = $request->session()->get('user')['id'];
+		if (!User::where('id','=',$id)->first()->ability(explode('|', $roles), explode('|', $permissions), array('validate_all' => $validateAll))) {
 			abort(403);
 		}
 

@@ -18,6 +18,7 @@ class EntrustSetupTables extends Migration
             $table->string('name')->unique();
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
+            $table->integer('site_id')->unsigned();
             $table->timestamps();
         });
 
@@ -40,6 +41,7 @@ class EntrustSetupTables extends Migration
             $table->string('name')->unique();
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
+            $table->tinyInteger('area')->unsigned();
             $table->timestamps();
         });
 

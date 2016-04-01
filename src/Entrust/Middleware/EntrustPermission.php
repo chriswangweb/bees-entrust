@@ -8,6 +8,7 @@
  * @package Zizaco\Entrust
  */
 
+use App\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
@@ -35,7 +36,10 @@ class EntrustPermission
 	 */
 	public function handle($request, Closure $next, $permissions)
 	{
-		if ($this->auth->guest() || !$request->user()->can(explode('|', $permissions))) {
+		$siteId = $request->session()->get('site_id');
+		$siteId = isset($siteId)?$siteId:1;
+		$id = $request->session()->get('user')['id'];
+		if (!User::where('id','=',$id)->first()->can(explode('|', $permissions),$siteId)) {
 			abort(403);
 		}
 

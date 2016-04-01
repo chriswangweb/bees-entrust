@@ -83,15 +83,16 @@ trait EntrustUserTrait
      * Checks if the user has a role by its name.
      *
      * @param string|array $name       Role name or array of role names.
+     * @param int $siteId
      * @param bool         $requireAll All roles in the array are required.
      *
      * @return bool
      */
-    public function hasRole($name, $requireAll = false)
+    public function hasRole($name, $siteId, $requireAll = false)
     {
         if (is_array($name)) {
             foreach ($name as $roleName) {
-                $hasRole = $this->hasRole($roleName);
+                $hasRole = $this->hasRole($roleName, $siteId);
 
                 if ($hasRole && !$requireAll) {
                     return true;
@@ -106,7 +107,7 @@ trait EntrustUserTrait
             return $requireAll;
         } else {
             foreach ($this->cachedRoles() as $role) {
-                if ($role->name == $name) {
+                if ($role->name == $name && $role->site_id == $siteId) {
                     return true;
                 }
             }
@@ -119,15 +120,16 @@ trait EntrustUserTrait
      * Check if user has a permission by its name.
      *
      * @param string|array $permission Permission string or array of permissions.
+     * @param int $siteId
      * @param bool         $requireAll All permissions in the array are required.
      *
      * @return bool
      */
-    public function can($permission, $requireAll = false)
+    public function can($permission, $siteId, $requireAll = false)
     {
         if (is_array($permission)) {
             foreach ($permission as $permName) {
-                $hasPerm = $this->can($permName);
+                $hasPerm = $this->can($permName,$siteId);
 
                 if ($hasPerm && !$requireAll) {
                     return true;
@@ -144,7 +146,7 @@ trait EntrustUserTrait
             foreach ($this->cachedRoles() as $role) {
                 // Validate against the Permission table
                 foreach ($role->cachedPermissions() as $perm) {
-                    if (str_is( $permission, $perm->name) ) {
+                    if (str_is( $permission, $perm->name) && $role->site_id == $siteId) {
                         return true;
                     }
                 }
@@ -160,7 +162,7 @@ trait EntrustUserTrait
      * @param string|array $roles       Array of roles or comma separated string
      * @param string|array $permissions Array of permissions or comma separated string.
      * @param array        $options     validate_all (true|false) or return_type (boolean|array|both)
-     *
+     * TODO::支持 site_id
      * @throws \InvalidArgumentException
      *
      * @return array|bool
